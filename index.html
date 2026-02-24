@@ -27,7 +27,6 @@
     color:var(--text);
     min-height:100vh;
   }
-
   .shell{max-width:1180px; margin:18px auto; padding:14px;}
   @media (max-width:420px){ .shell{padding:10px; margin:10px auto;} }
 
@@ -43,10 +42,7 @@
   @media (max-width:720px){ .topbar{flex-direction:column; align-items:flex-start;} }
 
   .brand{display:flex; align-items:center; gap:14px;}
-  .brand img{
-    height:68px; width:auto; display:block;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
-  }
+  .brand img{height:68px; width:auto; display:block; filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));}
   @media (max-width:420px){ .brand img{height:60px;} }
   .brand .t1{font-weight:900; letter-spacing:.2px; font-size:16px}
   .brand .t2{font-size:12px; color:var(--muted); margin-top:3px; line-height:1.2}
@@ -61,7 +57,7 @@
     border-radius: 14px;
     padding:10px 12px;
     cursor:pointer;
-    font-weight:800;
+    font-weight:900;
     transition: transform .08s ease, border-color .15s ease;
     user-select:none;
   }
@@ -135,7 +131,7 @@
     background: rgba(255,255,255,.04);
     overflow:auto;
   }
-  table{ width:100%; border-collapse:separate; border-spacing:0; min-width:720px; }
+  table{ width:100%; border-collapse:separate; border-spacing:0; min-width:740px; }
   th, td{ padding:10px 10px; font-size:12px; border-bottom:1px solid rgba(255,255,255,.10); white-space:nowrap; }
   th{ text-align:left; color: rgba(255,255,255,.75); background: rgba(255,255,255,.05); position:sticky; top:0; z-index:1; }
 
@@ -205,7 +201,7 @@
       <img src="LOGO1.png" alt="LOGO1" onerror="this.style.display='none'">
       <div>
         <div class="t1">Tortillas de Harina Las Piconas</div>
-        <div class="t2">Cierre de Caja • Cuadre Sistema vs Cajero (incluye Uber Eats y PedidosYa) • Imprime 2 tickets</div>
+        <div class="t2">Lógica real: Esperado = Fondo + Efectivo cierre − Compras • Depósito = Caja cajero − Fondo</div>
       </div>
     </div>
     <div class="actions">
@@ -221,7 +217,7 @@
     <!-- Captura -->
     <div class="card">
       <h3>
-        Captura del cierre
+        Captura del cierre (Sistema vs Cajero)
         <span class="pill" id="comprasPill">Compras: Q0.00</span>
       </h3>
       <div class="body">
@@ -233,7 +229,7 @@
           <div class="field">
             <label>Fecha del cierre</label>
             <input id="fecha" type="date">
-            <div class="subtle">Registro por <b>cajero + fecha</b> (reimpresión exacta).</div>
+            <div class="subtle">Registro por <b>cajero + fecha</b>.</div>
           </div>
         </div>
 
@@ -253,7 +249,7 @@
                 </div>
                 <div class="field">
                   <label>Efectivo (según cierre)</label>
-                  <input id="sysEfectivoCierre" type="number" inputmode="decimal" placeholder="0.00">
+                  <input id="sysEfectivo" type="number" inputmode="decimal" placeholder="0.00">
                 </div>
               </div>
 
@@ -274,32 +270,13 @@
                   <input id="sysPedidos" type="number" inputmode="decimal" placeholder="0.00">
                 </div>
                 <div class="field">
-                  <label>Total compras (auto)</label>
-                  <input id="sysComprasTotal" type="number" inputmode="decimal" placeholder="0.00" disabled>
+                  <label>Total compras (auto) — RESTA</label>
+                  <input id="sysComprasTotal" type="number" inputmode="decimal" disabled>
                 </div>
               </div>
 
               <div class="subtle">
-                <b>Esperado en caja</b> = Efectivo cierre + Fondo inicial ± Compras (las compras se detallan y se imprimen)
-              </div>
-              <div class="subtle" style="margin-top:6px">
-                Si tus compras son <b>GASTOS</b>, deben restar. Si son <b>REINTEGROS/ENTRADAS</b>, deben sumar.
-                (Abajo hay un switch para esto.)
-              </div>
-
-              <div style="height:8px"></div>
-              <div class="row">
-                <div class="field">
-                  <label>Modo compras</label>
-                  <input id="modoCompras" value="GASTOS (restan)" disabled>
-                  <div class="subtle">
-                    <button class="linkbtn" id="btnToggleCompras" type="button">Cambiar a ENTRADAS / GASTOS</button>
-                  </div>
-                </div>
-                <div class="field">
-                  <label>&nbsp;</label>
-                  <input value="(Se aplica al esperado)" disabled>
-                </div>
+                Compras hechas desde caja = <b>GASTOS</b> que salen de la venta → siempre <b>RESTAN</b>.
               </div>
             </div>
           </div>
@@ -313,39 +290,28 @@
               <div class="row">
                 <div class="field">
                   <label>Total en caja (efectivo físico)</label>
-                  <input id="cjTotalCaja" type="number" inputmode="decimal" placeholder="0.00">
+                  <input id="cjCaja" type="number" inputmode="decimal" placeholder="0.00">
+                  <div class="subtle">El cajero solo pone cuánto efectivo tiene en caja (un número).</div>
                 </div>
-                <div class="field">
-                  <label>Ventas en efectivo (según cajero)</label>
-                  <input id="cjEfectivo" type="number" inputmode="decimal" placeholder="0.00">
-                </div>
-              </div>
-
-              <div class="row">
                 <div class="field">
                   <label>Tarjeta (según cajero)</label>
                   <input id="cjTarjeta" type="number" inputmode="decimal" placeholder="0.00">
                 </div>
-                <div class="field">
-                  <label>Uber Eats (según cajero)</label>
-                  <input id="cjUber" type="number" inputmode="decimal" placeholder="0.00">
-                </div>
               </div>
 
               <div class="row">
                 <div class="field">
-                  <label>PedidosYa (según cajero)</label>
-                  <input id="cjPedidos" type="number" inputmode="decimal" placeholder="0.00">
+                  <label>Uber Eats (según cajero)</label>
+                  <input id="cjUber" type="number" inputmode="decimal" placeholder="0.00">
                 </div>
                 <div class="field">
-                  <label>Fondo inicial (referencia)</label>
-                  <input id="cjFondo" type="number" inputmode="decimal" value="1070">
+                  <label>PedidosYa (según cajero)</label>
+                  <input id="cjPedidos" type="number" inputmode="decimal" placeholder="0.00">
                 </div>
               </div>
 
               <div class="subtle">
-                El “Total en caja” es lo que manda para faltante/sobrante.
-                El resto es para cuadrar canales (tarjeta/uber/pedidos).
+                Aquí también se cuadra Uber/Pedidos/Tarjeta: cierre vs cajero.
               </div>
             </div>
           </div>
@@ -353,7 +319,7 @@
 
         <div style="height:12px"></div>
         <div class="subtle">
-          ✅ Imprime 2 tickets: 1) Cierre completo con compras y cuadre por canal. 2) Ticket de <b>Depósito/Saldo efectivo</b> = Total caja − Fondo.
+          Se imprimen 2 tickets: <b>cierre completo</b> + <b>saldo/depósito</b>.
         </div>
       </div>
     </div>
@@ -361,8 +327,8 @@
     <!-- Resultado -->
     <div class="card">
       <h3>
-        Resultado del cuadre
-        <span class="pill">Epson TM-T20 • 80mm</span>
+        Resultado
+        <span class="pill">80mm • Epson TM-T20</span>
       </h3>
       <div class="body">
         <div class="summary">
@@ -375,11 +341,11 @@
             <div class="v" id="vDif">Q0.00</div>
           </div>
           <div class="kpi" id="kpiDeposito">
-            <div class="k">Saldo efectivo / Depósito</div>
+            <div class="k">Saldo ventas / Depósito</div>
             <div class="v" id="vDeposito">Q0.00</div>
           </div>
           <div class="kpi" id="kpiCompras">
-            <div class="k">Compras total</div>
+            <div class="k">Compras (total)</div>
             <div class="v" id="vCompras">Q0.00</div>
           </div>
         </div>
@@ -411,7 +377,7 @@
   <div class="modal">
     <div class="mh">
       <div class="title">Compras (detalle compra por compra)</div>
-      <button class="btn secondary" id="btnCloseCompras">Cerrar</button>
+      <button class="btn secondary" id="btnCloseCompras" type="button">Cerrar</button>
     </div>
     <div class="mb">
       <div class="bigLogo">
@@ -421,7 +387,7 @@
       <div class="row">
         <div class="field">
           <label>Descripción</label>
-          <input id="compDesc" placeholder="Ej: gas, hielo, verdura..." autocomplete="off">
+          <input id="compDesc" placeholder="Ej: leche, gas, hielo..." autocomplete="off">
         </div>
         <div class="field">
           <label>Monto (Q)</label>
@@ -450,7 +416,6 @@
       <div style="height:10px"></div>
       <div class="subtle"><b>Total compras:</b> <span id="comprasTotalTxt">Q0.00</span></div>
     </div>
-
     <div class="mf">
       <button class="btn danger" id="btnClearCompras" type="button">Borrar compras</button>
     </div>
@@ -462,7 +427,7 @@
   <div class="modal">
     <div class="mh">
       <div class="title">Historial (por cajero y fecha)</div>
-      <button class="btn secondary" id="btnCloseModal">Cerrar</button>
+      <button class="btn secondary" id="btnCloseModal" type="button">Cerrar</button>
     </div>
     <div class="mb">
       <div class="row">
@@ -487,7 +452,6 @@
               <th>Caja</th>
               <th>Diferencia</th>
               <th>Depósito</th>
-              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -505,14 +469,10 @@
 <script>
   const $ = (id)=>document.getElementById(id);
   const EMPRESA = "Tortillas de Harina Las Piconas";
-  const STORE_KEY = "LP_CIERRES_V3";
-
-  // comprasMode: "GASTOS" => restan; "ENTRADAS" => suman
-  let comprasMode = "GASTOS";
+  const STORE_KEY = "LP_CIERRES_V4";
 
   function toMoney(n){ n = Number(n||0); return "Q" + n.toFixed(2); }
   function num(el){ return Number((el.value||"").toString().replace(",",".")) || 0; }
-
   function todayYmd(){
     const d = new Date();
     const y = d.getFullYear();
@@ -521,19 +481,15 @@
     return `${y}-${m}-${dd}`;
   }
   function nowNice(){ return new Date().toLocaleString(); }
-
   function escapeHtml(s){
     return (s ?? "").toString()
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
   }
 
   function tickNow(){ $("nowPill").textContent = nowNice(); }
 
-  // ===== Compras por cajero+fecha =====
+  // Compras por cajero+fecha
   function comprasKey(){
     const caj = ($("cajero").value||"").trim().toUpperCase();
     const fec = $("fecha").value || todayYmd();
@@ -574,79 +530,67 @@
     $("comprasPill").textContent = "Compras: " + toMoney(tot);
   }
 
-  // ===== Cálculos =====
   function compute(){
     const compras = loadCompras();
     const comprasTot = comprasTotal(compras);
 
-    const sys = {
-      fondo: num($("sysFondo")),
-      efectivo: num($("sysEfectivoCierre")),
-      tarjeta: num($("sysTarjeta")),
-      uber: num($("sysUber")),
-      pedidos: num($("sysPedidos"))
-    };
+    const sysFondo = num($("sysFondo"));
+    const sysEfe   = num($("sysEfectivo"));
+    const sysTar   = num($("sysTarjeta"));
+    const sysUber  = num($("sysUber"));
+    const sysPed   = num($("sysPedidos"));
 
-    const cj = {
-      caja: num($("cjTotalCaja")),
-      efectivo: num($("cjEfectivo")),
-      tarjeta: num($("cjTarjeta")),
-      uber: num($("cjUber")),
-      pedidos: num($("cjPedidos")),
-      fondoRef: num($("cjFondo"))
-    };
+    const cjCaja  = num($("cjCaja"));
+    const cjTar   = num($("cjTarjeta"));
+    const cjUber  = num($("cjUber"));
+    const cjPed   = num($("cjPedidos"));
 
-    // compras impacta el esperado
-    const comprasImpacto = (comprasMode === "GASTOS") ? -comprasTot : +comprasTot;
+    // ✅ LÓGICA CORRECTA:
+    // Compras = gastos desde caja => RESTAN a lo esperado
+    const esperadoCaja = sysFondo + sysEfe - comprasTot;
 
-    // Esperado en caja (lo que debería haber físicamente)
-    const esperado = sys.fondo + sys.efectivo + comprasImpacto;
+    // Cajero solo reporta "lo que tiene en caja"
+    const dif = cjCaja - esperadoCaja;
 
-    // Diferencia caja
-    const dif = cj.caja - esperado;
+    // ✅ Saldo ventas / depósito: lo que se saca del efectivo (caja - fondo fijo)
+    const deposito = cjCaja - sysFondo;
 
-    // Depósito / saldo efectivo: lo que se deposita al banco (caja - fondo)
-    // Usamos el fondo del SISTEMA porque ese es el fijo real.
-    const deposito = cj.caja - sys.fondo;
-
-    // KPIs
-    $("vEsperado").textContent = toMoney(esperado);
+    $("vEsperado").textContent = toMoney(esperadoCaja);
     $("vDif").textContent = toMoney(dif);
     $("vDeposito").textContent = toMoney(deposito);
     $("vCompras").textContent = toMoney(comprasTot);
 
-    // Color KPI diferencia
     const kpiDif = $("kpiDif");
     kpiDif.classList.remove("good","bad");
     if (Math.abs(dif) < 0.01) kpiDif.classList.add("good");
     else if (dif < 0) kpiDif.classList.add("bad");
     else kpiDif.classList.add("good");
 
-    // Estado
     let estado = "CUADRADO";
     if (Math.abs(dif) >= 0.01) estado = (dif < 0 ? "FALTANTE" : "SOBRANTE");
 
-    // Tabla de cuadre (incluye Uber/Pedidos y Tarjeta)
+    // Cuadre por canales + caja
     const rows = [
-      {k:"Efectivo (cierre vs cajero)", a: sys.efectivo, b: cj.efectivo},
-      {k:"Tarjeta (cierre vs cajero)", a: sys.tarjeta, b: cj.tarjeta},
-      {k:"Uber Eats (cierre vs cajero)", a: sys.uber, b: cj.uber},
-      {k:"PedidosYa (cierre vs cajero)", a: sys.pedidos, b: cj.pedidos},
-      {k:`Compras (${comprasMode})`, a: comprasImpacto, b: comprasImpacto},
-      {k:"Fondo inicial (fijo)", a: sys.fondo, b: sys.fondo},
-      {k:"TOTAL ESPERADO EN CAJA", a: esperado, b: esperado},
-      {k:"TOTAL EN CAJA (cajero)", a: 0, b: cj.caja},
-      {k:"SALDO/DEPÓSITO (Caja − Fondo)", a: 0, b: deposito},
+      {k:"Efectivo (cierre)", a: sysEfe, b: sysEfe, note:"(solo sistema)"},
+      {k:"Compras (gastos desde caja) — RESTA", a: -comprasTot, b: -comprasTot, note:"(detalle)"},
+      {k:"Fondo inicial", a: sysFondo, b: sysFondo, note:"(fijo)"},
+      {k:"ESPERADO EN CAJA", a: esperadoCaja, b: esperadoCaja, note:""},
+      {k:"TOTAL EN CAJA (cajero)", a: 0, b: cjCaja, note:"(ingreso único)"},
+      {k:"SALDO VENTAS / DEPÓSITO (Caja − Fondo)", a: 0, b: deposito, note:""},
+
+      {k:"Tarjeta (cierre vs cajero)", a: sysTar, b: cjTar, note:""},
+      {k:"Uber Eats (cierre vs cajero)", a: sysUber, b: cjUber, note:""},
+      {k:"PedidosYa (cierre vs cajero)", a: sysPed, b: cjPed, note:""}
     ];
 
     const tb = $("tbodyCompare");
     tb.innerHTML = "";
     rows.forEach(r=>{
-      const d = (r.b - r.a);
+      const d = r.b - r.a;
       const cls = (Math.abs(d) < 0.01) ? "good" : (d < 0 ? "bad" : "good");
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td>${escapeHtml(r.k)}</td>
+        <td>${escapeHtml(r.k)} ${r.note? `<span style="color:rgba(255,255,255,.45)"> ${escapeHtml(r.note)}</span>`:""}</td>
         <td>${toMoney(r.a)}</td>
         <td>${toMoney(r.b)}</td>
         <td><span class="badge ${cls}">${toMoney(d)}</span></td>
@@ -658,12 +602,17 @@
     $("comprasPill").textContent = "Compras: " + toMoney(comprasTot);
 
     $("statusLine").innerHTML =
-      `Estado: <b>${estado}</b>. (Caja − Esperado) • Depósito recomendado: <b>${toMoney(deposito)}</b>`;
+      `Estado: <b>${estado}</b> • Esperado: <b>${toMoney(esperadoCaja)}</b> • Caja: <b>${toMoney(cjCaja)}</b> • Depósito: <b>${toMoney(deposito)}</b>`;
 
-    return {sys, cj, compras, comprasTot, comprasMode, comprasImpacto, esperado, dif, deposito, estado};
+    return {
+      sys:{fondo:sysFondo, efectivo:sysEfe, tarjeta:sysTar, uber:sysUber, pedidos:sysPed},
+      cj:{caja:cjCaja, tarjeta:cjTar, uber:cjUber, pedidos:cjPed},
+      compras, comprasTot,
+      esperadoCaja, dif, deposito, estado
+    };
   }
 
-  // ===== Guardado historial =====
+  // Historial
   function keyOf(cajero, fecha){ return (cajero||"").trim().toUpperCase() + "|" + fecha; }
   function loadAll(){ return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
   function saveAll(arr){ localStorage.setItem(STORE_KEY, JSON.stringify(arr)); }
@@ -674,15 +623,12 @@
     saveAll(all);
   }
 
-  // ===== Tickets =====
+  // Tickets
   function buildTicketCierre(rec){
     const d = rec;
     const comprasLines = d.compras.length
       ? d.compras.map(x=>`<tr><td>${escapeHtml(x.desc)}</td><td class="r">${toMoney(x.monto)}</td></tr>`).join("")
       : `<tr><td colspan="2">Sin compras registradas</td></tr>`;
-
-    const comprasLabel = (d.comprasMode === "GASTOS") ? "GASTOS (restan)" : "ENTRADAS (suman)";
-    const comprasSigned = d.comprasImpacto; // ya viene con signo (+/-)
 
     return `
 <!doctype html>
@@ -713,26 +659,24 @@
   <div>Guardado: ${escapeHtml(d.guardadoEn)}</div>
 
   <div class="hr"></div>
+  <div class="b">CUADRE EFECTIVO</div>
+  <table>
+    <tr><td>Fondo inicial</td><td class="r">${toMoney(d.sys.fondo)}</td></tr>
+    <tr><td>Efectivo (cierre)</td><td class="r">${toMoney(d.sys.efectivo)}</td></tr>
+    <tr><td>Compras (gastos) RESTA</td><td class="r">-${toMoney(d.comprasTot).replace("Q","Q")}</td></tr>
+    <tr><td class="b">ESPERADO EN CAJA</td><td class="r b">${toMoney(d.esperadoCaja)}</td></tr>
+    <tr><td class="b">TOTAL EN CAJA (cajero)</td><td class="r b">${toMoney(d.cj.caja)}</td></tr>
+  </table>
+
+  <div class="hr"></div>
   <div class="b">CUADRE POR CANAL</div>
   <table>
-    <tr><td>Efectivo (cierre)</td><td class="r">${toMoney(d.sys.efectivo)}</td></tr>
-    <tr><td>Efectivo (cajero)</td><td class="r">${toMoney(d.cj.efectivo)}</td></tr>
     <tr><td>Tarjeta (cierre)</td><td class="r">${toMoney(d.sys.tarjeta)}</td></tr>
     <tr><td>Tarjeta (cajero)</td><td class="r">${toMoney(d.cj.tarjeta)}</td></tr>
     <tr><td>Uber Eats (cierre)</td><td class="r">${toMoney(d.sys.uber)}</td></tr>
     <tr><td>Uber Eats (cajero)</td><td class="r">${toMoney(d.cj.uber)}</td></tr>
     <tr><td>PedidosYa (cierre)</td><td class="r">${toMoney(d.sys.pedidos)}</td></tr>
     <tr><td>PedidosYa (cajero)</td><td class="r">${toMoney(d.cj.pedidos)}</td></tr>
-  </table>
-
-  <div class="hr"></div>
-  <div class="b">EFECTIVO EN CAJA</div>
-  <table>
-    <tr><td>Fondo inicial</td><td class="r">${toMoney(d.sys.fondo)}</td></tr>
-    <tr><td>Efectivo (cierre)</td><td class="r">${toMoney(d.sys.efectivo)}</td></tr>
-    <tr><td>Compras (${escapeHtml(comprasLabel)})</td><td class="r">${toMoney(comprasSigned)}</td></tr>
-    <tr><td class="b">TOTAL ESPERADO</td><td class="r b">${toMoney(d.esperado)}</td></tr>
-    <tr><td class="b">TOTAL EN CAJA (cajero)</td><td class="r b">${toMoney(d.cj.caja)}</td></tr>
   </table>
 
   <div class="hr"></div>
@@ -772,7 +716,7 @@
   <div class="c">
     <img src="LOGO1.png" onerror="this.style.display='none'"><br>
     <div class="b">${escapeHtml(EMPRESA)}</div>
-    <div class="small">SALDO EFECTIVO / DEPÓSITO</div>
+    <div class="small">SALDO VENTAS / DEPÓSITO</div>
   </div>
 
   <div class="hr"></div>
@@ -787,10 +731,7 @@
   </table>
 
   <div class="hr"></div>
-  <div class="small">
-    Nota: El fondo inicial no se mueve. El saldo es lo que corresponde a ventas en efectivo.
-  </div>
-
+  <div class="small">El fondo inicial no se mueve. El saldo es el efectivo de ventas disponible.</div>
   <div class="hr"></div>
   <div class="c small">80mm • Epson TM-T20</div>
 </body></html>`;
@@ -804,7 +745,6 @@
     setTimeout(()=>{ w.focus(); w.print(); }, 350);
   }
 
-  // ===== Acciones =====
   function saveAndPrint(){
     const caj = ($("cajero").value||"").trim();
     const fec = $("fecha").value;
@@ -821,37 +761,31 @@
       cj: calc.cj,
       compras: calc.compras,
       comprasTot: calc.comprasTot,
-      comprasMode: calc.comprasMode,
-      comprasImpacto: calc.comprasImpacto,
-      esperado: calc.esperado,
+      esperadoCaja: calc.esperadoCaja,
       dif: calc.dif,
       deposito: calc.deposito,
       estado: calc.estado
     };
     upsertRecord(rec);
 
-    // Ticket 1: Cierre completo
     printHTML(buildTicketCierre(rec));
-
-    // Ticket 2: Depósito
     setTimeout(()=>{ printHTML(buildTicketDeposito(rec)); }, 700);
   }
 
   function resetFields(){
     const keepDate = $("fecha").value || todayYmd();
     const caj = $("cajero").value;
+
     $("sysFondo").value = "1070";
-    $("sysEfectivoCierre").value = "";
+    $("sysEfectivo").value = "";
     $("sysTarjeta").value = "";
     $("sysUber").value = "";
     $("sysPedidos").value = "";
 
-    $("cjTotalCaja").value = "";
-    $("cjEfectivo").value = "";
+    $("cjCaja").value = "";
     $("cjTarjeta").value = "";
     $("cjUber").value = "";
     $("cjPedidos").value = "";
-    $("cjFondo").value = "1070";
 
     $("fecha").value = keepDate;
     $("cajero").value = caj;
@@ -859,7 +793,7 @@
     compute();
   }
 
-  // ===== Historial =====
+  // Historial UI
   function openHistory(){ $("modalWrap").style.display="flex"; renderHistory(); }
   function closeHistory(){ $("modalWrap").style.display="none"; }
 
@@ -882,14 +816,13 @@
       tr.innerHTML = `
         <td>${escapeHtml(r.fecha)}</td>
         <td>${escapeHtml(r.cajero)}</td>
-        <td>${toMoney(r.esperado)}</td>
+        <td>${toMoney(r.esperadoCaja)}</td>
         <td>${toMoney(r.cj?.caja ?? 0)}</td>
         <td><span class="badge ${cls}">${toMoney(r.dif)}</span></td>
         <td>${toMoney(r.deposito ?? 0)}</td>
-        <td><span class="badge ${cls}">${escapeHtml(r.estado||"")}</span></td>
         <td>
-          <button class="linkbtn" data-act="print1" data-key="${escapeHtml(r.key)}" type="button">Imprimir cierre</button>
-          <button class="linkbtn" data-act="print2" data-key="${escapeHtml(r.key)}" type="button">Imprimir depósito</button>
+          <button class="linkbtn" data-act="cierre" data-key="${escapeHtml(r.key)}" type="button">Imprimir cierre</button>
+          <button class="linkbtn" data-act="dep" data-key="${escapeHtml(r.key)}" type="button">Imprimir depósito</button>
         </td>
       `;
       tb.appendChild(tr);
@@ -901,8 +834,8 @@
         const key = b.getAttribute("data-key");
         const rec = loadAll().find(x=>x.key===key);
         if (!rec) return;
-        if (act==="print1") printHTML(buildTicketCierre(rec));
-        if (act==="print2") printHTML(buildTicketDeposito(rec));
+        if (act==="cierre") printHTML(buildTicketCierre(rec));
+        if (act==="dep") printHTML(buildTicketDeposito(rec));
       });
     });
   }
@@ -919,14 +852,14 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cierres_las_piconas_v3.json";
+    a.download = "cierres_las_piconas_v4.json";
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(url);
   }
 
-  // ===== Compras modal =====
+  // Compras modal
   function openCompras(){ $("comprasWrap").style.display="flex"; renderCompras(); }
   function closeCompras(){ $("comprasWrap").style.display="none"; }
 
@@ -951,26 +884,13 @@
     compute();
   }
 
-  // ===== Compras mode toggle =====
-  function setComprasModeUI(){
-    $("modoCompras").value = (comprasMode === "GASTOS") ? "GASTOS (restan)" : "ENTRADAS (suman)";
-  }
-  function toggleComprasMode(){
-    comprasMode = (comprasMode === "GASTOS") ? "ENTRADAS" : "GASTOS";
-    setComprasModeUI();
-    compute();
-  }
-
-  // ===== init =====
-  function loadAll(){ return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); }
-
+  // Init
   $("fecha").value = todayYmd();
   setInterval(tickNow, 1000); tickNow();
 
-  // Live compute
   [
-    "sysFondo","sysEfectivoCierre","sysTarjeta","sysUber","sysPedidos",
-    "cjTotalCaja","cjEfectivo","cjTarjeta","cjUber","cjPedidos","cjFondo"
+    "sysFondo","sysEfectivo","sysTarjeta","sysUber","sysPedidos",
+    "cjCaja","cjTarjeta","cjUber","cjPedidos"
   ].forEach(id=> $(id).addEventListener("input", compute));
 
   $("btnSavePrint").addEventListener("click", saveAndPrint);
@@ -990,9 +910,6 @@
   $("fCajero").addEventListener("input", renderHistory);
   $("fFecha").addEventListener("change", renderHistory);
 
-  $("btnToggleCompras").addEventListener("click", toggleComprasMode);
-
-  setComprasModeUI();
   renderCompras();
   compute();
 </script>
